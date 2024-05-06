@@ -1,34 +1,28 @@
-import ListGroup from "./components/ListGroup";
-import Alert from "./components/Alert";
-import Button from "./components/Button";
 import { useState } from "react";
+import InputField from "./components/InputField";
+import { ToDo } from "./components/model";
+import ToDoList from "./components/ToDoList";
 
 function App() {
-  let items = ["New York", "San Francisco", "Tokyo", "London", "Paris"];
+  const [toDo, setToDo] = useState<string>("");
+  const [arrayOfToDos, setArrayOfToDos] = useState<ToDo[]>([]);
 
-  const handleSelectItem = (item: string) => {
-    console.log(item);
+  const handleAddToDo = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (toDo) {
+     setArrayOfToDos([
+        ...arrayOfToDos,
+        { id: Date.now(), toDo: toDo, isDone: false },
+      ]);
+      setToDo("");
+    }
   };
 
-  const [alertVisible, setAlertVisibility] = useState(false);
-
   return (
-    <div>
-      <ListGroup
-        items={items}
-        heading="Cities"
-        onSelectItem={handleSelectItem}
-      />
-
-      {alertVisible && <Alert onClose={() => setAlertVisibility(false)}>
-        Hello <span>World</span>
-      </Alert>}
-
-      <Button
-        text="Button"
-        color="danger"
-        onClick={() => setAlertVisibility(true)}
-      />
+    <div className="App">
+      <h1 className="heading">TaskList</h1>
+      <InputField toDo={toDo} setToDo={setToDo} handleAdd={handleAddToDo} />
+      <ToDoList arrayOfToDos={arrayOfToDos} setArrayOfToDos={setArrayOfToDos}/>
     </div>
   );
 }
